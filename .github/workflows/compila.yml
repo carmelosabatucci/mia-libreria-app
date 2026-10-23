@@ -5,7 +5,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Utilizziamo una versione fissa e super stabile di Ubuntu per evitare conflitti
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Ricezione file del progetto
@@ -15,6 +16,15 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
+
+    - name: Verifica presenza file fondamentali
+      run: |
+        echo "=== VERIFICA DEI FILE CARICATI ==="
+        ls -la
+        if [ ! -f "buildozer.spec" ]; then
+          echo "ERRORE CRITICO: Il file buildozer.spec non si trova nella cartella principale!"
+          exit 1
+        fi
 
     - name: Installazione dipendenze di sistema e Buildozer
       run: |
