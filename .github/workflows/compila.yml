@@ -1,0 +1,33 @@
+name: Compila APK Android con Buildozer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Ricezione file del progetto
+      uses: actions/checkout@v4
+
+    - name: Configurazione ambiente Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Installazione dipendenze di sistema e Buildozer
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev libmpdec-dev uuid-dev
+        pip install --upgrade buildozer cython
+
+    - name: Compilazione APK con Buildozer
+      run: |
+        yes y | buildozer android debug
+
+    - name: Salvataggio file APK Finale
+      uses: actions/upload-artifact@v4
+      with:
+        name: Applicazione-Pronta
+        path: bin/*.apk
