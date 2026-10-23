@@ -16,25 +16,21 @@ jobs:
         rm -rf .buildozer
         rm -rf bin
 
-    - name: Configurazione ambiente Python 3.11
+    - name: Configurazione ambiente Python 3.14
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.14-dev'
 
-    - name: Installazione dipendenze di sistema
+    - name: Installazione dipendenze di sistema aggiornate
       run: |
         sudo apt-get update
-        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
+        # Installiamo strumenti di sviluppo aggiornati nativi per supportare Python 3.14
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf-archive libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
         pip install --upgrade pip
-        pip install "buildozer==1.5.0" "cython<3.0" virtualenv
-        pip install "python-for-android==2024.1.21"
+        pip install --upgrade buildozer cython virtualenv
 
-    - name: Compilazione APK con Blocco Forzato delle Versioni
+    - name: Compilazione APK con Allineamento Python 3.14
       run: |
-        # Iniettiamo la variabile nel sistema per costringere il compilatore a usare Python 3.11 ed evitare il 3.14
-        export P4A_requirements="python3==3.11.0,kivy"
-        export APP_android_archs="arm64-v8a"
-        
         buildozer -v android debug
 
     - name: Salvataggio file APK Finale
