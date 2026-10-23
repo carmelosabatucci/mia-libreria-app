@@ -24,6 +24,5 @@ jobs:
 
     - name: Compilazione APK con Buildozer
       run: |
-        # Usiamo il comando nativo di buildozer per accettare le licenze senza causare il broken pipe di yes
-        buildozer android licenses
+        # Avviamo direttamente la compilazione, le licenze sono già accettate nel buildozer.spec
         buildozer -v android debug
