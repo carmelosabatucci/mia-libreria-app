@@ -11,6 +11,12 @@ jobs:
     - name: Ricezione file del progetto
       uses: actions/checkout@v4
 
+    - name: Pulizia totale vecchi residui
+      run: |
+        echo "=== CANCELLAZIONE VECCHIA CACHE DI PYTHON 3.14 ==="
+        rm -rf .buildozer
+        rm -rf bin
+
     - name: Configurazione ambiente Python
       uses: actions/setup-python@v5
       with:
@@ -22,15 +28,8 @@ jobs:
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
         pip install --upgrade pip
         pip install "buildozer==1.5.0" "cython<3.0" virtualenv
-        # Utilizziamo la versione corretta ed esistente segnalata dai log
         pip install "python-for-android==2024.1.21"
 
     - name: Compilazione APK con Buildozer
       run: |
         buildozer -v android debug
-
-    - name: Salvataggio file APK Finale
-      uses: actions/upload-artifact@v4
-      with:
-        name: Applicazione-Pronta
-        path: bin/*.apk
