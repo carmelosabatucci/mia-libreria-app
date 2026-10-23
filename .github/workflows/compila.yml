@@ -16,27 +16,14 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Verifica presenza file fondamentali
-      run: |
-        echo "=== VERIFICA DEI FILE CARICATI ==="
-        ls -la
-        if [ ! -f "buildozer.spec" ]; then
-          echo "ERRORE CRITICO: Il file buildozer.spec non si trova nella cartella principale!"
-          exit 1
-        fi
-
     - name: Installazione dipendenze di sistema e Buildozer
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
-        pip install --upgrade buildozer cython
+        pip install --upgrade buildozer cython virtualenv
 
     - name: Compilazione APK con Buildozer
       run: |
-        yes y | buildozer android debug
-
-    - name: Salvataggio file APK Finale
-      uses: actions/upload-artifact@v4
-      with:
-        name: Applicazione-Pronta
-        path: bin/*.apk
+        # Usiamo il comando nativo di buildozer per accettare le licenze senza causare il broken pipe di yes
+        buildozer android licenses
+        buildozer -v android debug
