@@ -27,3 +27,4 @@ jobs:
     - name: Compilazione APK con Buildozer
       run: |
         buildozer -v android debug
+        buildozer -v android debug
