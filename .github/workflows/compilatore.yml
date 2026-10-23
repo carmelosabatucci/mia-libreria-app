@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Compilazione APK con Azione Ufficiale Kivy
-      uses: ArtemSBulgakov/action-android-buildozer@v1.3
+      uses: artemSBulgakov/action-android-buildozer@v1.3
       with:
         buildozer_version: '1.5.0'
         # Questo comando esegue la pulizia interna automatica prima di compilare
