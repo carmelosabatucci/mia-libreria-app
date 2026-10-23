@@ -14,14 +14,13 @@ jobs:
     - name: Configurazione ambiente Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.14-dev' # Configura GitHub per usare l'ambiente di sviluppo Python 3.14
 
     - name: Installazione dipendenze di sistema e Buildozer
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
         pip install --upgrade buildozer cython virtualenv
-        pip install python-for-android==2024.1.21
 
     - name: Compilazione APK con Buildozer
       run: |
