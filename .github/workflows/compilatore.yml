@@ -20,10 +20,10 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
-        # Installiamo versioni specifiche e stabili che non generano errori di compilazione C/C++
         pip install --upgrade pip
         pip install "buildozer==1.5.0" "cython<3.0" virtualenv
-        pip install "python-for-android==2023.05.24"
+        # Utilizziamo la versione corretta ed esistente segnalata dai log
+        pip install "python-for-android==2024.1.21"
 
     - name: Compilazione APK con Buildozer
       run: |
