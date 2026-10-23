@@ -5,7 +5,6 @@ on:
 
 jobs:
   build:
-    # Utilizziamo una versione fissa e super stabile di Ubuntu per evitare conflitti
     runs-on: ubuntu-24.04
 
     steps:
@@ -29,7 +28,7 @@ jobs:
     - name: Installazione dipendenze di sistema e Buildozer
       run: |
         sudo apt-get update
-        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev libmpdec-dev uuid-dev
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
         pip install --upgrade buildozer cython
 
     - name: Compilazione APK con Buildozer
