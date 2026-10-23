@@ -19,4 +19,6 @@ android.accept_sdk_license = True
 [buildozer]
 log_level = 2
 warn_on_root = 1
-p4a.branch = release-2024.01.21
+p4a.url = https://github.com
+p4a.branch = v2024.01.21
+
