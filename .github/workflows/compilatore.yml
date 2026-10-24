@@ -16,23 +16,22 @@ jobs:
         rm -rf .buildozer
         rm -rf bin
 
-    - name: Configurazione ambiente Python 3.14
+    - name: Configurazione ambiente Python 3.11
       uses: actions/setup-python@v5
       with:
-        python-version: '3.14-dev'
+        python-version: '3.11'
 
     - name: Installazione dipendenze di sistema aggiornate
       run: |
         sudo apt-get update
-        # Installiamo strumenti di sviluppo aggiornati nativi per supportare Python 3.14
-        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf-archive libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
         pip install --upgrade pip
-        pip install --upgrade buildozer cython virtualenv
+        pip install --upgrade "buildozer" "cython<3.0" virtualenv
 
-    - name: Compilazione APK con Allineamento Python 3.14
+    - name: Compilazione APK con Python 3.11
       run: |
-        buildozer -v android debug
-
+        yes y | buildozer -v android debug
+        
     - name: Salvataggio file APK Finale
       uses: actions/upload-artifact@v4
       with:
