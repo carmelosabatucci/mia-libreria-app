@@ -34,14 +34,22 @@ jobs:
         pip install --upgrade pip
         pip install --upgrade "buildozer==1.5.0" "cython<3.0" virtualenv
 
-    - name: Compilazione APK Autogestita
+    - name: Compilazione APK con Pulizia Rigorosa
       env:
         ANDROID_REMOTE_ANDROID_SDK_HOME: /home/runner/.android
       run: |
+        # Rimozione vecchi vincoli di versione
         sed -i 's/requirements = python3==3.11.1,kivy/requirements = python3,kivy/g' buildozer.spec
         sed -i 's/requirements = python3==3.11.0,kivy/requirements = python3,kivy/g' buildozer.spec
+        
+        # CANCELLAZIONE DI PYTHON 3.14 DALLA MEMORIA
+        buildozer android clean
+        
+        # Creazione cartelle di supporto
         mkdir -p ~/.android
         touch ~/.android/repositories.cfg
+        
+        # Avvio compilazione finale
         yes y | buildozer -v android debug
         
     - name: Salvataggio file APK Finale
