@@ -37,14 +37,16 @@ jobs:
     - name: Compilazione APK Finale
       env:
         ANDROID_REMOTE_ANDROID_SDK_HOME: /home/runner/.android
+        # FORZATURA GLOBALE: Diciamo a python-for-android di usare esattamente la versione dell'host
+        P4A_python_version: "3.11.17"
       run: |
-        # TRUCCO FONDAMENTALE: Forza i requisiti a usare il Python 3.11 esatto dell'host
+        # Allineiamo il file buildozer.spec alla versione del server
         sed -i 's/requirements =.*/requirements = python3==3.11.17,kivy/g' buildozer.spec
         
         mkdir -p ~/.android
         touch ~/.android/repositories.cfg
         
-        # Avvio compilazione finale
+        # Avvio compilazione con la forzatura attiva
         yes y | buildozer -v android debug
         
     - name: Salvataggio file APK Finale
