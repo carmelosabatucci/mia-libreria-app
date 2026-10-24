@@ -27,31 +27,25 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Installazione dipendenze di sistema e Buildozer stabile
+    - name: Installazione dipendenze di sistema e Buildozer Retro-Compatibile
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev lld
         pip install --upgrade pip
-        # Installiamo esplicitamente python-for-android a livello globale
-        pip install --upgrade "buildozer==1.5.0" "cython<3.0" virtualenv "python-for-android"
+        # Forziamo una versione stabile e collaudata di Buildozer e python-for-android che non include i bug di Python 3.14
+        pip install --upgrade "buildozer==1.5.0" "cython<3.0" virtualenv "python-for-android==2024.01.21"
 
     - name: Compilazione APK Finale
       env:
         ANDROID_REMOTE_ANDROID_SDK_HOME: /home/runner/.android
       run: |
-        # Allineiamo il file buildozer.spec alla versione dell'host per coerenza
-        sed -i 's/requirements =.*/requirements = python3==3.11.17,kivy/g' buildozer.spec
-        
-        # Individuiamo lo strumento globale e applichiamo la disattivazione del blocco versioni
-        TOOLCHAIN_FILE=$(python3 -c "import pythonforandroid.toolchain as t; print(t.__file__)")
-        echo "Modifico il file toolchain globale in: $TOOLCHAIN_FILE"
-        sed -i 's/raise IOError(\x27python3 should have same version as hostpython3, {} != {}\x27/print(\x27Ignoro errore versioni: {} != {}\x27/g' "$TOOLCHAIN_FILE"
+        # Allineiamo i requisiti del file .spec a una versione compatibile con la release stabile
+        sed -i 's/requirements =.*/requirements = python3==3.11.0,kivy/g' buildozer.spec
         
         mkdir -p ~/.android
         touch ~/.android/repositories.cfg
         
-        # TRUCCO FINALE: Diciamo a Buildozer di usare il toolchain globale già patchato, 
-        # impedendogli di scaricare la versione locale bloccata
+        # Avviamo la build imponendo a Buildozer di usare la versione stabile globale
         yes y | buildozer -v android debug --p4a=pythonforandroid
         
     - name: Salvataggio file APK Finale
