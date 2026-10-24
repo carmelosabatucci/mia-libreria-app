@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Ricezione file del progetto
@@ -16,10 +16,10 @@ jobs:
         rm -rf .buildozer
         rm -rf bin
 
-    - name: Configurazione ambiente Python 3.11
+    - name: Configurazione ambiente Python 3.14
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.14.0-alpha.2' # Si allinea perfettamente alla richiesta 3.14.2 del toolchain
 
     - name: Configurazione Java JDK 17
       uses: actions/setup-java@v4
@@ -27,13 +27,13 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Installazione dipendenze di sistema e Buildozer stabile
+    - name: Installazione dipendenze di sistema e Buildozer Aggiornato
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev lld
         pip install --upgrade pip
-        # Installiamo le versioni specifiche per garantire compatibilità con Python 3.11
-        pip install --upgrade "buildozer==1.5.0" "cython<3.0" virtualenv
+        # Installiamo Buildozer direttamente da master per supportare i nuovi Python
+        pip install --upgrade git+https://github.com cython virtualenv
 
     - name: Compilazione APK Finale
       env:
@@ -41,7 +41,6 @@ jobs:
       run: |
         mkdir -p ~/.android
         touch ~/.android/repositories.cfg
-        # Avvio compilazione forzando la stabilità
         yes y | buildozer -v android debug
         
     - name: Salvataggio file APK Finale
