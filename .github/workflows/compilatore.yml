@@ -21,15 +21,18 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Installazione dipendenze di sistema aggiornate
+    - name: Installazione dipendenze di sistema e Buildozer stabile
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev
         pip install --upgrade pip
-        pip install --upgrade "buildozer" "cython<3.0" virtualenv
+        pip install --upgrade "buildozer<=1.5.0" "cython<3.0" virtualenv
 
-    - name: Compilazione APK con Python 3.11
+    - name: Compilazione APK Autogestita
       run: |
+        # Modifichiamo al volo i requisiti per evitare il blocco della versione
+        sed -i 's/requirements = python3==3.11.1,kivy/requirements = python3,kivy/g' buildozer.spec
+        sed -i 's/requirements = python3==3.11.0,kivy/requirements = python3,kivy/g' buildozer.spec
         yes y | buildozer -v android debug
         
     - name: Salvataggio file APK Finale
