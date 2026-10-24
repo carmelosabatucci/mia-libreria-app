@@ -5,22 +5,24 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Ricezione file del progetto
       uses: actions/checkout@v4
 
-    - name: Pulizia totale vecchi residui
+    - name: Annientamento totale cartelle nascoste corrotta
+      # Questo elimina il fantasma del 3.14.2 dal server prima che crei danni
       run: |
         rm -rf .buildozer
         rm -rf bin
+        rm -rf ~/.buildozer
+        rm -rf ~/.android
 
-    - name: Configurazione ambiente Python 3.14.2 esatto
+    - name: Configurazione ambiente Python 3.11 Stabile
       uses: actions/setup-python@v5
       with:
-        # Installiamo esattamente la versione pretesa dal toolchain di Android
-        python-version: '3.14.2'
+        python-version: '3.11'
 
     - name: Configurazione Java JDK 17
       uses: actions/setup-java@v4
@@ -28,25 +30,24 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Installazione dipendenze di sistema e Buildozer
+    - name: Installazione dipendenze e Buildozer Standard
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libsqlite3-dev cmake libgdbm-dev libssl-dev libffi-dev uuid-dev lld
         pip install --upgrade pip
-        # Usiamo l'ultima versione di Buildozer compatibile con i nuovi standard Python
-        pip install --upgrade buildozer cython virtualenv python-for-android
+        pip install --upgrade "buildozer==1.5.0" "cython<3.0" virtualenv
 
-    - name: Compilazione APK Finale
+    - name: Configurazione spec e Compilazione APK
       env:
         ANDROID_REMOTE_ANDROID_SDK_HOME: /home/runner/.android
       run: |
-        # Allineiamo al millimetro il file buildozer.spec alla versione richiesta
-        sed -i 's/requirements =.*/requirements = python3==3.14.2,kivy/g' buildozer.spec
+        # Riscriviamo a forza il file .spec per usare solo il 3.11 pulito
+        sed -i 's/requirements =.*/requirements = python3==3.11.0,kivy/g' buildozer.spec
         
         mkdir -p ~/.android
         touch ~/.android/repositories.cfg
         
-        # Avvio della build definitiva
+        # Lancio pulito senza residui passati
         yes y | buildozer -v android debug
         
     - name: Salvataggio file APK Finale
