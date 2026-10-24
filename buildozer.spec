@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas,json
 version = 0.1
 
 # Requisiti allineati alla versione richiesta dal server
-requirements = python3==3.14.2,kivy
+requirements = python3==3.11.0,kivy
 
 orientation = portrait
 osx.kivy_version = 2.1.0
