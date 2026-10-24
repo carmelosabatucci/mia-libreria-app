@@ -38,15 +38,8 @@ jobs:
       env:
         ANDROID_REMOTE_ANDROID_SDK_HOME: /home/runner/.android
       run: |
-        # Rimozione vecchi vincoli di versione per sicurezza
-        sed -i 's/requirements = python3==3.11.1,kivy/requirements = python3,kivy/g' buildozer.spec
-        sed -i 's/requirements = python3==3.11.0,kivy/requirements = python3,kivy/g' buildozer.spec
-        
-        # Creazione cartelle di supporto Android SDK
         mkdir -p ~/.android
         touch ~/.android/repositories.cfg
-        
-        # Avvio compilazione finale
         yes y | buildozer -v android debug
         
     - name: Salvataggio file APK Finale
